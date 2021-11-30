@@ -19,9 +19,6 @@ FILENAME_RENDERED=0
 SECTION="REPLACE ME"
 
 function handle_cmd() {
-    # $1 -> cmd
-    # $4 -> filename
-
     OUT="$(bash $1 $2)"
     CODE="$?"
 
@@ -38,16 +35,16 @@ if [ -d "$PWD/.git" ] && [ "$1" = "git" ]; then
     MERGE_BASE=$(git merge-base $CURRENT_BRANCH develop 2> /dev/null || git merge-base $CURRENT_BRANCH master 2> /dev/null || git merge-base $CURRENT_BRANCH main 2> /dev/null || >&2 echo "No branch develop, master or main" )
     echo -e "\033[97mCOMPARING $CURRENT_BRANCH TO commit $MERGE_BASE...\n"
     FILES=$(git fetch && git diff --name-only $MERGE_BASE HEAD | grep ".php$" | perl -ne 'chomp(); if (-e $_) {print "$_\n"}')
-elif [ "$1" != "" ]; then
+elif [ "$1" != "" ] && [ "$1" != "git" ]; then
     FILES="$@"
 else
     echo -e "\033[97mANALYZING FOLDS src/ AND test/...\n"
     FILES=$(find src tests -name "*.php")
 fi
 
-GENERIC_CHECKS_EXT=(php js py yml yaml xml json dist .gitignore ts html css html xhtml rb rss svg atom c cpp go)
+GENERIC_CHECKS_EXT=(php js py yml yaml xml json dist .gitignore ts html css html xhtml rb rss svg atom c cpp go sh)
 
-FILES=$(echo $FILES | xargs find | xargs -I{} find {} ! -name 'Kernel.php' ! -name 'bootstrap.php')
+FILES=$(echo $FILES | xargs find | xargs -I{} find {} -type f ! -name 'Kernel.php' ! -name 'bootstrap.php' | grep -vE '.git')
 
 for f in $FILES
 do
