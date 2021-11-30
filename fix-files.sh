@@ -71,7 +71,7 @@ do
         handle_cmd "$BASE/checks/php/whitespace_properties.sh" $f
 
         if [[ $f == tests/* ]]; then
-            SECTION="PHP Checks"
+            SECTION="PHP Test Checks"
             SECTION_RENDERED=0
             handle_cmd "$BASE/checks/php/namespacing.sh" $f
         fi
