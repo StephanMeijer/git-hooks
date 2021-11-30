@@ -4,14 +4,7 @@ BASE="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 source "$BASE/functions.sh"
 
-find_cmd jq
-find_cmd grep
-find_cmd sed
-find_cmd git
-find_cmd xargs
-find_cmd echo
-find_cmd find
-find_cmd perl
+find_cmd jq grep sed xargs echo find perl sha1sum
 
 EXIT_CODE=0
 SECTION_RENDERED=0
@@ -31,6 +24,8 @@ function handle_cmd() {
 }
 
 if [ -d "$PWD/.git" ] && [ "$1" = "git" ]; then
+    find_cmd git
+
     CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
     MERGE_BASE=$(git merge-base $CURRENT_BRANCH develop 2> /dev/null || git merge-base $CURRENT_BRANCH master 2> /dev/null || git merge-base $CURRENT_BRANCH main 2> /dev/null || >&2 echo "No branch develop, master or main" )
     echo -e "\033[97mCOMPARING $CURRENT_BRANCH TO commit $MERGE_BASE...\n"
@@ -58,6 +53,13 @@ do
 
     if [[ $f == public/* ]]; then
         continue;
+    fi
+
+    if [[ $f == *.json ]]; then
+        SECTION="JSON Checks"
+        SECTION_RENDERED=0
+
+        handle_cmd "$BASE/checks/json/format.sh" $f
     fi
 
     if [[ $f == *.php ]]; then

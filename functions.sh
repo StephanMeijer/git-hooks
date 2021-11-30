@@ -19,9 +19,11 @@ function section() {
 }
 
 function find_cmd() {
-    if ! command -v $1 &> /dev/null
-    then
-        failure "Command \`$1\` could not be found" 1
-        exit 1
-    fi
+    for cmd in "$@"; do
+        if ! command -v $cmd &> /dev/null
+        then
+            failure "Command \`$cmd\` could not be found" 1
+            exit 1
+        fi
+    done
 }
