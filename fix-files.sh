@@ -64,6 +64,7 @@ do
         SECTION="PHP Checks"
         SECTION_RENDERED=0
 
+        handle_cmd "$BASE/checks/php/syntax.sh" $f
         handle_cmd "$BASE/checks/php/switch.sh" $f
         handle_cmd "$BASE/checks/php/strict_types.sh" $f
         handle_cmd "$BASE/checks/php/typing.sh" $f
