@@ -81,8 +81,8 @@ do
         SECTION="Generic Checks"
         SECTION_RENDERED=0
 
-        handle_cmd "$BASE/checks/trailing.sh" $f
-        handle_cmd "$BASE/checks/empty_lines.sh" $f
+        handle_cmd "$BASE/checks/generic/trailing.sh" $f
+        handle_cmd "$BASE/checks/generic/empty_lines.sh" $f
     ;; esac;
 done
 
