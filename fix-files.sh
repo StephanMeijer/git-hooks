@@ -4,7 +4,7 @@ BASE="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 source "$BASE/functions.sh"
 
-find_cmd jq grep sed xargs echo find perl sha1sum
+find_cmd jq grep sed xargs echo find perl sha1sum xmllint
 
 EXIT_CODE=0
 SECTION_RENDERED=0
@@ -39,7 +39,7 @@ fi
 
 GENERIC_CHECKS_EXT=(php js py yml yaml xml json dist .gitignore ts html css html xhtml rb rss svg atom c cpp go sh)
 
-FILES=$(echo $FILES | xargs find | xargs -I{} find {} -type f ! -name 'Kernel.php' ! -name 'bootstrap.php' | grep -vE '.git')
+FILES=$(echo $FILES | xargs find | xargs -I{} find {} -type f ! -name 'Kernel.php' ! -name 'bootstrap.php' | grep -vE '.git' | awk '!a[$0]++' )
 
 for f in $FILES
 do
@@ -47,11 +47,23 @@ do
     filename=$(basename "$f")
     ext="${f##*.}"
 
-    if [[ $f == config/* ]]; then
+    if [[ $f == ./config/* ]]; then
         continue;
     fi
 
-    if [[ $f == public/* ]]; then
+    if [[ $f == ./public/* ]]; then
+        continue;
+    fi
+
+    if [[ $f == ./vendor/* ]]; then
+        continue;
+    fi
+
+    if [[ $f == ./node_modules/* ]]; then
+        continue;
+    fi
+
+    if [[ $f == ./var/* ]]; then
         continue;
     fi
 
